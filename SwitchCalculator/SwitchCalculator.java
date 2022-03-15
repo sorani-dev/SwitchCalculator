@@ -1,10 +1,14 @@
 package SwitchCalculator;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class SwitchCalculator {
     public static void main(String[] args) {
-        double firstNum, secondNum, answer;
+        BigDecimal firstNum, secondNum, answer;
         char userSelected = 'c';
 
         CalculatorMenu();
@@ -14,57 +18,55 @@ public class SwitchCalculator {
 
         while (userSelected > 5 || userSelected == 'e') {
             switch (userSelected) {
-                case 'A':
-                case 'a':
+                case 'A', 'a':
                     System.out.println("Enter first number: ");
-                    firstNum = in.nextDouble();
+                    firstNum = getDecimalInput(in);
                     System.out.println("Enter second number: ");
-                    secondNum = in.nextDouble();
-                    answer = firstNum + secondNum;
+                    secondNum = getDecimalInput(in);
+                    answer = firstNum.add(secondNum);
                     System.out.println("First number + Second number = " + answer);
                     CalculatorMenu();
 
                     break;
-                case 'S':
-                case 's':
+                case 'S', 's':
                     System.out.println("Enter first number: ");
-                    firstNum = in.nextDouble();
+                    firstNum = getDecimalInput(in);
                     System.out.println("Enter second number: ");
-                    secondNum = in.nextDouble();
-                    answer = firstNum - secondNum;
+                    secondNum = getDecimalInput(in);
+                    answer = firstNum.subtract(secondNum);
                     System.out.println("First number - Second number = " + answer);
 
                     CalculatorMenu();
                     break;
 
-                case 'M':
-                case 'm':
+                case 'M', 'm':
                     System.out.println("Enter first number: ");
-                    firstNum = in.nextDouble();
+                    firstNum = getDecimalInput(in);
                     System.out.println("Enter second number: ");
-                    secondNum = in.nextDouble();
-                    answer = firstNum * secondNum;
+                    secondNum = getDecimalInput(in);
+                    answer = firstNum.multiply(secondNum);
                     System.out.println("First number * Second number = " + answer);
 
                     CalculatorMenu();
 
                     break;
 
-                case 'D':
-                case 'd':
+                case 'D', 'd':
                     System.out.println("Enter first number: ");
-                    firstNum = in.nextDouble();
+                    firstNum = getDecimalInput(in);
                     System.out.println("Enter second number: ");
-                    secondNum = in.nextDouble();
-                    answer = firstNum / secondNum;
-                    System.out.println("First number / Second number = " + answer);
-
+                    secondNum = getDecimalInput(in);
+                    try {
+                        answer = firstNum.divide(secondNum);
+                        System.out.println("First number / Second number = " + answer);
+                    } catch (ArithmeticException e) {
+                        System.out.println("Error: " + e.getMessage());
+                    }
                     CalculatorMenu();
 
                     break;
 
-                case 'E':
-                case 'e':
+                case 'E', 'e':
                     break;
 
                 default:
@@ -72,7 +74,7 @@ public class SwitchCalculator {
 
                     break;
             }
-            if (userSelected == 'e' || userSelected == 'E') {
+            if (Character.toUpperCase(userSelected) == 'E') {
                 break;
             }
             // try {
@@ -83,7 +85,8 @@ public class SwitchCalculator {
             // System.out.println("\n\n");
             userSelected = in.next().charAt(0);
         }
-        
+        in.close();
+
     }
 
     public static void CalculatorMenu() {
@@ -104,5 +107,32 @@ public class SwitchCalculator {
         }
 
         System.out.println("+================================+");
+    }
+
+    public static double getDoubleInput(Scanner in) {
+        var num = 0.0;
+        try {
+            num = in.nextDouble();
+        } catch (InputMismatchException e) {
+            System.out.println(e.getMessage());
+            num = Double.parseDouble(in.next().replace(',', '.'));
+        }
+        return num;
+    }
+
+    public static BigDecimal getDecimalInput(Scanner in) {
+        var num = new BigDecimal(0.0);
+        // var df = new DecimalFormat();
+        // var symbols = new DecimalFormatSymbols();
+        // symbols.setDecimalSeparator('.');
+        // df.setDecimalFormatSymbols(symbols);
+        try {
+
+            num = in.nextBigDecimal();
+        } catch (InputMismatchException e) {
+            // System.out.println(e.getMessage());
+            num = new BigDecimal(in.next().replace(',', '.'));
+        }
+        return num;
     }
 }
