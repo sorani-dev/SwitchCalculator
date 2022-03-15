@@ -1,8 +1,6 @@
 package SwitchCalculator;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
