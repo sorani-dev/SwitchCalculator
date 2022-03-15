@@ -1,80 +1,95 @@
 package SwitchCalculator;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class SwitchCalculator {
     public static void main(String[] args) {
         BigDecimal firstNum, secondNum, answer;
-        char userSelected = 'c';
+        char userSelected;
 
         CalculatorMenu();
 
         var in = new Scanner(System.in);
         userSelected = in.next().charAt(0);
 
-        while (userSelected > 5 || userSelected == 'e') {
+        while (userSelected > 5) {
+
+            // User wants to exit
+            if (Character.toUpperCase(userSelected) == 'E') {
+                break;
+            }
+
             switch (userSelected) {
                 case 'A', 'a':
+
                     System.out.println("Enter first number: ");
                     firstNum = getDecimalInput(in);
                     System.out.println("Enter second number: ");
                     secondNum = getDecimalInput(in);
+
                     answer = firstNum.add(secondNum);
                     System.out.println("First number + Second number = " + answer);
-                    CalculatorMenu();
 
                     break;
                 case 'S', 's':
+
                     System.out.println("Enter first number: ");
                     firstNum = getDecimalInput(in);
                     System.out.println("Enter second number: ");
                     secondNum = getDecimalInput(in);
+
                     answer = firstNum.subtract(secondNum);
                     System.out.println("First number - Second number = " + answer);
 
-                    CalculatorMenu();
                     break;
 
                 case 'M', 'm':
+
                     System.out.println("Enter first number: ");
                     firstNum = getDecimalInput(in);
                     System.out.println("Enter second number: ");
                     secondNum = getDecimalInput(in);
+
                     answer = firstNum.multiply(secondNum);
                     System.out.println("First number * Second number = " + answer);
-
-                    CalculatorMenu();
 
                     break;
 
                 case 'D', 'd':
+
                     System.out.println("Enter first number: ");
                     firstNum = getDecimalInput(in);
                     System.out.println("Enter second number: ");
                     secondNum = getDecimalInput(in);
+
                     try {
                         answer = firstNum.divide(secondNum);
                         System.out.println("First number / Second number = " + answer);
                     } catch (ArithmeticException e) {
-                        System.out.println("Error: " + e.getMessage());
+                        if (secondNum.intValue() == 0) {
+                            System.out.println("Error: " + e.getMessage());
+                        } else {
+                            if (e.getMessage().contains(
+                                    "Non-terminating decimal expansion; no exact representable decimal result")) {
+                                var ans = firstNum.doubleValue() / secondNum.doubleValue();
+                                System.out.println("Beware! Error of precision ");
+                                System.out.println("First number / Second number = " + ans);
+                            }
+                            // System.out.println("Error: " + e.getMessage());
+                        }
                     }
-                    CalculatorMenu();
 
-                    break;
-
-                case 'E', 'e':
                     break;
 
                 default:
                     System.out.println("Invalid Selection");
-
                     break;
             }
-            if (Character.toUpperCase(userSelected) == 'E') {
-                break;
-            }
+            CalculatorMenu();
+
             // try {
             // System.out.wait((long) 500.0);
             // } catch (InterruptedException e) {
@@ -119,7 +134,7 @@ public class SwitchCalculator {
     }
 
     public static BigDecimal getDecimalInput(Scanner in) {
-        var num = new BigDecimal(0.0);
+        BigDecimal num = null;
         // var df = new DecimalFormat();
         // var symbols = new DecimalFormatSymbols();
         // symbols.setDecimalSeparator('.');
