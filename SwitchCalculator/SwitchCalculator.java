@@ -10,12 +10,13 @@ public class SwitchCalculator {
         BigDecimal firstNum, secondNum, answer;
         char userSelected;
 
-        CalculatorMenu();
-
         var in = new Scanner(System.in);
-        userSelected = in.next().charAt(0);
 
-        while (userSelected > 5) {
+        do {
+
+            // Show menu
+            CalculatorMenu();
+            userSelected = in.next().charAt(0);
 
             // User wants to exit
             if (Character.toUpperCase(userSelected) == 'E') {
@@ -88,7 +89,6 @@ public class SwitchCalculator {
                     System.out.println("Invalid Selection");
                     break;
             }
-            CalculatorMenu();
 
             // try {
             // System.out.wait((long) 500.0);
@@ -96,8 +96,8 @@ public class SwitchCalculator {
             // // e.printStackTrace();
             // }
             // System.out.println("\n\n");
-            userSelected = in.next().charAt(0);
-        }
+        } while (userSelected != 'e' || userSelected != 'E');
+
         in.close();
 
     }
@@ -135,17 +135,32 @@ public class SwitchCalculator {
 
     public static BigDecimal getDecimalInput(Scanner in) {
         BigDecimal num = null;
-        // var df = new DecimalFormat();
-        // var symbols = new DecimalFormatSymbols();
-        // symbols.setDecimalSeparator('.');
-        // df.setDecimalFormatSymbols(symbols);
-        try {
-
-            num = in.nextBigDecimal();
-        } catch (InputMismatchException e) {
-            // System.out.println(e.getMessage());
-            num = new BigDecimal(in.next().replace(',', '.'));
-        }
+        var isInputValid = false;
+        do {
+            // var df = new DecimalFormat();
+            // var symbols = new DecimalFormatSymbols();
+            // symbols.setDecimalSeparator('.');
+            // df.setDecimalFormatSymbols(symbols);
+            try {
+                num = in.nextBigDecimal();
+                isInputValid = true;
+            } catch (InputMismatchException e) {
+                try {
+                    // System.out.println(e.getMessage());
+                    num = new BigDecimal(in.next().replace(',', '.'));
+                    isInputValid = true;
+                } catch (Exception exx) {
+                    System.out.println(exx.getLocalizedMessage());
+                }
+            } catch (NumberFormatException ex) {
+                System.out.println(ex.getMessage());
+            } catch (Exception e) {
+                System.out.println(e.getLocalizedMessage());
+            }
+            if (!isInputValid) {
+                System.out.println("Enter your input again please.");
+            }
+        } while (!isInputValid);
         return num;
     }
 }
